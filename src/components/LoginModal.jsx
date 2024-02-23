@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { FaUserNinja, FaLock } from "react-icons/fa";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { usernameLogIn } from "../api";
+import { usernameLogIn } from "../services/api";
 
 export default function LoginModal({ isOpen, onClose }) {
   const {
