@@ -21,7 +21,7 @@ import { Link } from "react-router-dom";
 import LoginModal from "./LoginModal";
 import SignUpModal from "./SignUpModal";
 import useUser from "../composables/useUser";
-import { logOut } from "../services/api";
+import { logOut } from "../services/auth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
 

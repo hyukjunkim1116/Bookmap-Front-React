@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { FaUserNinja, FaLock } from "react-icons/fa";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { usernameLogIn } from "../services/api";
+import { emailLogIn } from "../services/auth";
 
 export default function LoginModal({ isOpen, onClose }) {
   const {
@@ -29,7 +29,7 @@ export default function LoginModal({ isOpen, onClose }) {
   const toast = useToast();
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: usernameLogIn,
+    mutationFn: emailLogIn,
     onSuccess: () => {
       toast({
         title: "welcome back!",

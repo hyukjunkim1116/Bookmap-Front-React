@@ -1,16 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
-import { getMe } from "../services/api";
+import { useRecoilValue } from "recoil";
+import { isLoginState } from "../state/auth";
 
 export default function useUser() {
-  const { isLoading, data, isError } = useQuery({
-    queryKey: ["me"],
-    queryFn: getMe,
-    retry: false,
-    refetchOnWindowFocus: false,
-  });
+  const isLogin = useRecoilValue(isLoginState);
   return {
-    userLoading: isLoading,
-    user: data,
-    isLoggedIn: !isError,
+    user: localStorage.getItem("auth/user"),
+    isLoggedIn: isLogin,
   };
 }
