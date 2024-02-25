@@ -20,13 +20,19 @@ import {
 import { Link } from "react-router-dom";
 import LoginModal from "./LoginModal";
 import SignUpModal from "./SignUpModal";
-import useUser from "../composables/useUser";
-import { logOut } from "../services/auth";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRef } from "react";
-
+import { useMutation } from "@tanstack/react-query";
+import { useRef, useState, useEffect } from "react";
+import { useAuthStore } from "../stores/auth";
 export default function Header() {
-  const { userLoading, isLoggedIn, user } = useUser();
+  const { user, token, clearUser } = useAuthStore();
+  const [loggedIn, setLoggedIn] = useState();
+  useEffect(() => {
+    if (token) {
+      setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
+    }
+  }, [token]);
   const {
     isOpen: isLoginOpen,
     onClose: onLoginClose,
@@ -41,10 +47,9 @@ export default function Header() {
   const logoColor = useColorModeValue("red.500", "red.200");
   const Icon = useColorModeValue(FaMoon, FaSun);
   const toast = useToast();
-  const queryClient = useQueryClient();
   const toastId = useRef();
   const mutation = useMutation({
-    mutationFn: logOut,
+    mutationFn: clearUser,
     onMutate: () => {
       toastId.current = toast({
         title: "Login out...",
@@ -56,7 +61,6 @@ export default function Header() {
     },
     onSuccess: () => {
       if (toastId.current) {
-        queryClient.refetchQueries(["me"]);
         toast.update(toastId.current, {
           status: "success",
           title: "Done!",
@@ -96,32 +100,34 @@ export default function Header() {
           aria-label="Toggle dark mode"
           icon={<Icon />}
         />
-        {!userLoading ? (
-          !isLoggedIn ? (
-            <>
-              <Button onClick={onLoginOpen}>Log in</Button>
-              <LightMode>
-                <Button onClick={onSignUpOpen} colorScheme={"red"}>
-                  Sign up
-                </Button>
-              </LightMode>
-            </>
-          ) : (
-            <Menu>
-              <MenuButton>
-                <Avatar name={user?.name} src={user?.avatar} size={"md"} />
-              </MenuButton>
-              <MenuList>
-                {user?.is_host ? (
-                  <Link to="/rooms/upload">
-                    <MenuItem>Upload room</MenuItem>
-                  </Link>
-                ) : null}
-                <MenuItem onClick={onLogOut}>Log out</MenuItem>
-              </MenuList>
-            </Menu>
-          )
-        ) : null}
+        {!loggedIn ? (
+          <>
+            <Button onClick={onLoginOpen}>Log in</Button>
+            <LightMode>
+              <Button onClick={onSignUpOpen} colorScheme={"red"}>
+                Sign up
+              </Button>
+            </LightMode>
+          </>
+        ) : (
+          <Menu>
+            <MenuButton>
+              <Avatar name={user?.username} src={user?.userImage} size={"md"} />
+            </MenuButton>
+            <MenuList>
+              {user.is_verified ? (
+                <Link to="/rooms/upload">
+                  <MenuItem>Upload room</MenuItem>
+                </Link>
+              ) : (
+                <Link to="/rooms/upload">
+                  <MenuItem>이메일 인증을 진행하세요!</MenuItem>
+                </Link>
+              )}
+              <MenuItem onClick={onLogOut}>Log out</MenuItem>
+            </MenuList>
+          </Menu>
+        )}
       </HStack>
       <LoginModal isOpen={isLoginOpen} onClose={onLoginClose} />
       <SignUpModal isOpen={isSignUpOpen} onClose={onSignUpClose} />

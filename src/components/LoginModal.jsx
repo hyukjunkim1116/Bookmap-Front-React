@@ -16,10 +16,12 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { FaUserNinja, FaLock } from "react-icons/fa";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { emailLogIn } from "../services/auth";
+import { useAuthStore } from "../stores/auth";
 
 export default function LoginModal({ isOpen, onClose }) {
+  const { setUser, setToken } = useAuthStore();
   const {
     register,
     handleSubmit,
@@ -27,21 +29,22 @@ export default function LoginModal({ isOpen, onClose }) {
     reset,
   } = useForm();
   const toast = useToast();
-  const queryClient = useQueryClient();
+
   const mutation = useMutation({
     mutationFn: emailLogIn,
-    onSuccess: () => {
+    onSuccess: (response) => {
+      setUser(response);
+      setToken(response.access, response.refresh);
       toast({
         title: "welcome back!",
         status: "success",
       });
       onClose();
-      queryClient.refetchQueries(["me"]);
       reset();
     },
   });
-  const onSubmit = ({ username, password }) => {
-    mutation.mutate({ username, password });
+  const onSubmit = ({ email, password }) => {
+    mutation.mutate({ email, password });
   };
   return (
     <Modal onClose={onClose} isOpen={isOpen}>
@@ -58,12 +61,12 @@ export default function LoginModal({ isOpen, onClose }) {
                 </Box>
               </InputLeftElement>
               <Input
-                isInvalid={Boolean(errors.username?.message)}
-                {...register("username", {
-                  required: "Please write a username",
+                isInvalid={Boolean(errors.email?.message)}
+                {...register("email", {
+                  required: "Please write a email",
                 })}
                 variant={"filled"}
-                placeholder="Username"
+                placeholder="Email"
               />
             </InputGroup>
             <InputGroup>
@@ -87,7 +90,7 @@ export default function LoginModal({ isOpen, onClose }) {
           </VStack>
           {mutation.isError ? (
             <Text color="red.500" textAlign={"center"} fontSize="sm">
-              Username or Password are wrong
+              {console.log(mutation.error)}
             </Text>
           ) : null}
           <Button
