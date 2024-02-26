@@ -11,7 +11,7 @@ export const useAuthStore = create(
       setUser: (data) => {
         set({ user: data });
       },
-      clearUser: () => set({ token: null }, { user: null }),
+      clearUser: () => set({ token: null, user: null }),
       setToken: (access, refresh) => {
         set({
           token: {
@@ -21,12 +21,12 @@ export const useAuthStore = create(
         });
       },
       getToken: () => {
-        get().token || null;
+        return get().token || null;
       },
-      updateuser: (name, partialData) => {
+      updateuser: ( partialData) => {
         const newData = {
           ...get().user,
-          name: partialData,
+          ...partialData,
         };
         set({ user: newData });
       },

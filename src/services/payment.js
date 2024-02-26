@@ -1,7 +1,7 @@
-import { jwtInstance } from "./utils/jwtInterceptor";
+import axiosInstance from "../utils/axiosUtils";
 export function payToPortOne(data) {
-  return jwtInstance.post(`payments/pay`, data);
+  return axiosInstance.post(`payments/pay`, data);
 }
 export function getPaymentsHistory() {
-  return jwtInstance.get(`payments/pay`);
+  return axiosInstance.get(`payments/pay`);
 }

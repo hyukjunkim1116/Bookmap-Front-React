@@ -1,14 +1,8 @@
-import { jwtInstance, formInstance } from "./utils/jwtInterceptor";
-import { readAndCompressImage } from "browser-image-resizer";
+import axiosInstance from "../utils/axiosUtils";
 
 export function uploadPostImage(data) {
-  return formInstance.post(`posts/image`, data);
+  return axiosInstance.post(`posts/image`, data);
 }
 export function deletePostImage(url) {
-  return jwtInstance.delete(`posts/image?url=${url}`);
-}
-export function compressImage(file) {
-  return readAndCompressImage(file, {
-    quality: 0.8,
-  });
+  return axiosInstance.delete(`posts/image?url=${url}`);
 }

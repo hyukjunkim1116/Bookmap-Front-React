@@ -19,7 +19,7 @@ import { FaUserNinja, FaLock } from "react-icons/fa";
 import { useMutation } from "@tanstack/react-query";
 import { emailLogIn } from "../services/auth";
 import { useAuthStore } from "../stores/auth";
-
+import SocialLogin from "./SocialLogin";
 export default function LoginModal({ isOpen, onClose }) {
   const { setUser, setToken } = useAuthStore();
   const {
@@ -29,7 +29,6 @@ export default function LoginModal({ isOpen, onClose }) {
     reset,
   } = useForm();
   const toast = useToast();
-
   const mutation = useMutation({
     mutationFn: emailLogIn,
     onSuccess: (response) => {
@@ -102,6 +101,7 @@ export default function LoginModal({ isOpen, onClose }) {
           >
             Log in
           </Button>
+          <SocialLogin />
         </ModalBody>
       </ModalContent>
     </Modal>

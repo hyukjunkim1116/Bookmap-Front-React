@@ -23,6 +23,7 @@ import SignUpModal from "./SignUpModal";
 import { useMutation } from "@tanstack/react-query";
 import { useRef, useState, useEffect } from "react";
 import { useAuthStore } from "../stores/auth";
+import { sendVerificationEmail } from "../services/auth";
 export default function Header() {
   const { user, token, clearUser } = useAuthStore();
   const [loggedIn, setLoggedIn] = useState();
@@ -48,6 +49,23 @@ export default function Header() {
   const Icon = useColorModeValue(FaMoon, FaSun);
   const toast = useToast();
   const toastId = useRef();
+  const verifyEmail = useMutation({
+    mutationFn: sendVerificationEmail,
+    onSuccess: () => {
+      toast({
+        title: "이메일 전송 완료!",
+        status: "success",
+      });
+    },
+    onError: (err) => {
+      console.log(err);
+      toast({
+        title: "Something went wrong",
+        status: "error",
+      });
+    },
+  });
+
   const mutation = useMutation({
     mutationFn: clearUser,
     onMutate: () => {
@@ -71,6 +89,9 @@ export default function Header() {
   });
   const onLogOut = async () => {
     mutation.mutate();
+  };
+  const sendEmail = () => {
+    verifyEmail.mutate(user?.user_id);
   };
   return (
     <Stack
@@ -111,18 +132,19 @@ export default function Header() {
           </>
         ) : (
           <Menu>
+            {user?.username}
             <MenuButton>
-              <Avatar name={user?.username} src={user?.userImage} size={"md"} />
+              <Avatar name={user?.username} src={user?.image} size={"md"} />
             </MenuButton>
             <MenuList>
-              {user.is_verified ? (
-                <Link to="/rooms/upload">
-                  <MenuItem>Upload room</MenuItem>
+              {user?.is_verified ? (
+                <Link to="/mypage">
+                  <MenuItem>나의 프로필</MenuItem>
                 </Link>
               ) : (
-                <Link to="/rooms/upload">
-                  <MenuItem>이메일 인증을 진행하세요!</MenuItem>
-                </Link>
+                <MenuItem onClick={sendEmail}>
+                  이메일 인증을 진행하세요!
+                </MenuItem>
               )}
               <MenuItem onClick={onLogOut}>Log out</MenuItem>
             </MenuList>

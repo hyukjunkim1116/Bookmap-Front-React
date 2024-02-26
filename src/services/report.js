@@ -1,4 +1,4 @@
-import { jwtInstance } from "./utils/jwtInterceptor";
+import axiosInstance from "../utils/axiosUtils";
 export function reportPost(postId, data) {
-  return jwtInstance.post(`reports/${postId}`, data);
+  return axiosInstance.post(`reports/${postId}`, data);
 }

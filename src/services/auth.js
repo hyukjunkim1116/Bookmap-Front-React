@@ -1,20 +1,18 @@
-import { jwtInstance, axiosInstance } from "../utils/jwtInterceptor";
+import jwtaxios from "../utils/interceptor";
+import axiosInstance from "../utils/axiosUtils";
 import { jwtDecode } from "jwt-decode";
-import Cookie from "js-cookie";
+//TODO : axios interceptor response use 완성하기
+// 완료
 const DEFAULT_PHOTO_URL =
   "https://api.dicebear.com/6.x/adventurer-neutral/svg?seed=";
 export function generateDefaultPhotoURL(uid) {
   return `${DEFAULT_PHOTO_URL}${uid}`;
 }
-
-export const logOut = () => {
-  Cookie.remove("access");
-  Cookie.remove("refresh");
-};
+// 완료
 export const emailSignUp = (data) => {
-  jwtInstance.post("users/", data).then((response) => response.data);
+  axiosInstance.post("users/", data).then((response) => response.data);
 };
-
+// 완료
 export const emailLogIn = async (data) => {
   const response = await axiosInstance.post("users/login/", data);
   const { access, refresh, email, username, image, social, is_verified } =
@@ -32,8 +30,9 @@ export const emailLogIn = async (data) => {
     is_verified,
   };
 };
+//완료
 export const kakaoLogin = async (data) => {
-  const response = await jwtInstance.post(`users/kakao/`, data);
+  const response = await axiosInstance.post(`users/kakao/`, data);
   const { access, refresh, email, username, image, social, is_verified } =
     response.data;
   const { user_id } = jwtDecode(access);
@@ -48,22 +47,35 @@ export const kakaoLogin = async (data) => {
     is_verified,
   };
 };
+//완료
+export const sendVerificationEmail = async (uid) => {
+  return await axiosInstance.post(`users/${uid}/verify/`);
+};
+//완료
+export const updateUserProfile = async (userData) => {
+  const { data, uid } = userData;
 
+  axiosInstance.interceptors.request.use((config) => {
+    if (!config.headers) return config;
+    const accessToken = JSON.parse(localStorage.getItem("user")).state.token
+      .access;
+    if (accessToken && config.headers) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+      config.headers["Content-Type"] = "application/json";
+    }
+    return config;
+  });
+  return await axiosInstance.put(`users/${uid}/`, data);
+};
 export async function updateUserPassword(data) {
-  return await jwtInstance.put(`users/change-password/`, data);
+  return await jwtaxios.put(`users/change-password/`, data);
 }
-export async function sendVerificationEmail(uid) {
-  return await jwtInstance.post(`users/${uid}/verify/`);
+export async function findPasswordWithEmail(data) {
+  return await jwtaxios.put(`users/find-password/`, data);
 }
 
-export async function findPasswordWithEmail(data) {
-  return await jwtInstance.put(`users/find-password/`, data);
-}
-export async function updateUserProfile(data, uid) {
-  return await jwtInstance.put(`users/${uid}/`, data);
-}
 export async function deleteUser(uid) {
-  return await jwtInstance.delete(`users/${uid}/`);
+  return await jwtaxios.delete(`users/${uid}/`);
 }
 // export async function updateUserImage(data, uid) {
 //   return await formInstance.patch(`users/${uid}/image`, data);
