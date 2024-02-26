@@ -20,6 +20,7 @@ import {
 import { Link } from "react-router-dom";
 import LoginModal from "./LoginModal";
 import SignUpModal from "./SignUpModal";
+import FindPasswordModal from "./FindPasswordModal";
 import { useMutation } from "@tanstack/react-query";
 import { useRef, useState, useEffect } from "react";
 import { useAuthStore } from "../stores/auth";
@@ -34,6 +35,12 @@ export default function Header() {
       setLoggedIn(false);
     }
   }, [token]);
+
+  const {
+    isOpen: isFindPasswordOpen,
+    onClose: onFindPasswordClose,
+    onOpen: onFindPasswordOpen,
+  } = useDisclosure();
   const {
     isOpen: isLoginOpen,
     onClose: onLoginClose,
@@ -129,6 +136,14 @@ export default function Header() {
                 Sign up
               </Button>
             </LightMode>
+            <Button
+              color="red.500"
+              textAlign={"center"}
+              fontSize="sm"
+              onClick={onFindPasswordOpen}
+            >
+              Forgot Password?
+            </Button>
           </>
         ) : (
           <Menu>
@@ -153,6 +168,10 @@ export default function Header() {
       </HStack>
       <LoginModal isOpen={isLoginOpen} onClose={onLoginClose} />
       <SignUpModal isOpen={isSignUpOpen} onClose={onSignUpClose} />
+      <FindPasswordModal
+        isOpen={isFindPasswordOpen}
+        onClose={onFindPasswordClose}
+      />
     </Stack>
   );
 }

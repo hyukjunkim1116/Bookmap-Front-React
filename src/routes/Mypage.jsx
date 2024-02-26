@@ -16,14 +16,17 @@ import { useAuthStore } from "../stores/auth";
 import ProtectedPage from "../components/ProtectedPage";
 import { updateUserProfile } from "../services/auth";
 import { useState } from "react";
+import ChangePassword from "../components/ChangePassword";
 export default function Mypage() {
   const { updateuser, user, getUid } = useAuthStore();
+  const uid = getUid();
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm();
+
   const toast = useToast();
   const [username, setUsername] = useState(user?.username);
   const mutation = useMutation({
@@ -37,10 +40,11 @@ export default function Mypage() {
       reset();
     },
   });
+
   const onSubmit = (data) => {
-    const uid = getUid();
     mutation.mutate({ data, uid });
   };
+
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
   };
@@ -62,13 +66,13 @@ export default function Mypage() {
             <Input
               id="username"
               type="text"
-              value={username}
+              value={username || ""}
               isInvalid={Boolean(errors.username?.message)}
               {...register("username")}
               onChange={handleUsernameChange}
             />
-            <FormLabel>Email</FormLabel>
-            <Input isDisabled type="email" value={user.email} />
+            <FormLabel mt={4}>Email</FormLabel>
+            <Input isDisabled type="email" value={user?.email || ""} />
             {mutation.isError ? (
               <Text color="red.500" textAlign={"center"} fontSize="sm">
                 {console.log(mutation.error)}
@@ -84,6 +88,7 @@ export default function Mypage() {
               Save Changes
             </Button>
           </FormControl>
+          <ChangePassword />
         </VStack>
       </Box>
     </ProtectedPage>

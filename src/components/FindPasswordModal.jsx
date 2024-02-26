@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useForm } from "react-hook-form";
 import {
   Box,
@@ -17,13 +18,10 @@ import {
 } from "@chakra-ui/react";
 import { FaUserNinja, FaLock } from "react-icons/fa";
 import { useMutation } from "@tanstack/react-query";
-import { emailLogIn } from "../services/auth";
+import { findPasswordWithEmail } from "../services/auth";
 import { useAuthStore } from "../stores/auth";
 import { useEffect } from "react";
-import SocialLogin from "./SocialLogin";
-
-export default function LoginModal({ isOpen, onClose }) {
-  
+export default function FindPasswordModal({ isOpen, onClose }) {
   const { setUser, setToken } = useAuthStore();
   const {
     register,
@@ -33,30 +31,27 @@ export default function LoginModal({ isOpen, onClose }) {
   } = useForm();
   const toast = useToast();
   const mutation = useMutation({
-    mutationFn: emailLogIn,
+    mutationFn: findPasswordWithEmail,
     onSuccess: (response) => {
-      setUser(response);
-      setToken(response.access, response.refresh);
+      console.log(response, "asdasd");
       toast({
         title: "welcome back!",
         status: "success",
       });
-      onClose();
       reset();
     },
   });
   useEffect(() => {
     mutation.reset(); // Mutation을 초기 상태로 되돌림
   }, []);
-  const onSubmit = ({ email, password }) => {
-    mutation.mutate({ email, password });
+  const onSubmit = ({ email }) => {
+    mutation.mutate({ email });
   };
- 
   return (
     <Modal onClose={onClose} isOpen={isOpen}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Log in</ModalHeader>
+        <ModalHeader>Find Password</ModalHeader>
         <ModalCloseButton />
         <ModalBody as="form" onSubmit={handleSubmit(onSubmit)}>
           <VStack>
@@ -75,24 +70,6 @@ export default function LoginModal({ isOpen, onClose }) {
                 placeholder="Email"
               />
             </InputGroup>
-            <InputGroup>
-              <InputLeftElement>
-                {
-                  <Box color="gray.500">
-                    <FaLock />
-                  </Box>
-                }
-              </InputLeftElement>
-              <Input
-                isInvalid={Boolean(errors.password?.message)}
-                {...register("password", {
-                  required: "Please write a password",
-                })}
-                type="password"
-                variant={"filled"}
-                placeholder="Password"
-              />
-            </InputGroup>
           </VStack>
           {mutation.isError ? (
             <Text color="red.500" textAlign={"center"} fontSize="sm">
@@ -106,13 +83,10 @@ export default function LoginModal({ isOpen, onClose }) {
             colorScheme={"red"}
             w="100%"
           >
-            Log in
+            Find Password
           </Button>
-          
-          <SocialLogin />
         </ModalBody>
       </ModalContent>
-      
     </Modal>
   );
 }

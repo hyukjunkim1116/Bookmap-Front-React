@@ -25,7 +25,7 @@ export const emailLogIn = async (data) => {
     refresh,
     email,
     username,
-    userImage,
+    image: userImage,
     social,
     is_verified,
   };
@@ -67,12 +67,30 @@ export const updateUserProfile = async (userData) => {
   });
   return await axiosInstance.put(`users/${uid}/`, data);
 };
-export async function updateUserPassword(data) {
-  return await jwtaxios.put(`users/change-password/`, data);
-}
-export async function findPasswordWithEmail(data) {
-  return await jwtaxios.put(`users/find-password/`, data);
-}
+//완료
+export const updateUserPassword = async (data) => {
+  axiosInstance.interceptors.request.use((config) => {
+    if (!config.headers) return config;
+    const accessToken = JSON.parse(localStorage.getItem("user")).state?.token
+      ?.access;
+    if (accessToken && config.headers) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+      config.headers["Content-Type"] = "application/json";
+    }
+    return config;
+  });
+  return await axiosInstance
+    .put(`users/change-password/`, data)
+    .then((response) => response.data);
+};
+
+export const findPasswordWithEmail = async (data) => {
+  console.log(data, "dada");
+  const email = data?.email;
+  return await axiosInstance
+    .put(`users/find-password/`, email)
+    .then((response) => response.data);
+};
 
 export async function deleteUser(uid) {
   return await jwtaxios.delete(`users/${uid}/`);
