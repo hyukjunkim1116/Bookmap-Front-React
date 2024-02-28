@@ -2,7 +2,8 @@
 import { axiosInstance, axiosFormInstance } from "../utils/axiosUtils";
 import { jwtDecode } from "jwt-decode";
 //TODO : axios interceptor response use 완성하기
-//TODO : 무한스크롤,검색,필터링 하기
+//TODO : 무한스크롤(useinfinitequery),검색,필터링 하기
+//TODO : 결제기능 만들기
 // 완료
 const DEFAULT_PHOTO_URL =
   "https://api.dicebear.com/6.x/adventurer-neutral/svg?seed=";

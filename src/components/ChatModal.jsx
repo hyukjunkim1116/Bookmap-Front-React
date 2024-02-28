@@ -14,30 +14,32 @@ import {
   ModalOverlay,
   Text,
   VStack,
+  Flex,
+  Avatar,
+  Spacer,
 } from "@chakra-ui/react";
 import { FaRocketchat } from "react-icons/fa";
-import { useMutation } from "@tanstack/react-query";
-import { emailLogIn } from "../services/auth";
-import { useEffect } from "react";
+import { useChatWebSocket } from "../services/chat";
+import { useAuthStore } from "../stores/auth";
+import { generateDefaultPhotoURL } from "../services";
 export default function ChatModal({ isOpen, onClose }) {
+  const { getUid } = useAuthStore();
+  const uid = getUid();
+  const { newMessage, message, setMessage, sendJsonMessage } =
+    useChatWebSocket(uid);
+  console.log(newMessage, "message");
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm();
-  const mutation = useMutation({
-    mutationFn: emailLogIn,
-    onSuccess: (response) => {
-      reset();
-    },
-  });
-  const onSubmit = () => {
-    mutation.mutate();
+
+  const onSubmit = ({ message }) => {
+    sendJsonMessage({ message });
+    reset();
   };
-  useEffect(() => {
-    mutation.reset(); // Mutation을 초기 상태로 되돌림
-  }, []);
+
   return (
     <Modal onClose={onClose} isOpen={isOpen}>
       <ModalOverlay />
@@ -52,7 +54,26 @@ export default function ChatModal({ isOpen, onClose }) {
             p={4}
             overflowY="auto"
           >
-            <Text>This is a chat message</Text>
+            {newMessage.map((message) => (
+              <Flex align="center" mt={2} key={message.id}>
+                <Avatar
+                  size="sm"
+                  src={
+                    message.sender_image ||
+                    generateDefaultPhotoURL(message.sender_id)
+                  }
+                />
+
+                <Box ml={2}>
+                  <Text fontWeight="bold">{message.sender}</Text>
+                  <Text fontSize="sm">{message.content}</Text>
+                </Box>
+                <Spacer />
+                <Text fontSize="xs" color="gray.500">
+                  {new Date(message.timestamp).toLocaleTimeString()}
+                </Text>
+              </Flex>
+            ))}
           </Box>
           <ModalBody as="form" onSubmit={handleSubmit(onSubmit)}>
             <InputGroup size={"md"}>
@@ -62,26 +83,16 @@ export default function ChatModal({ isOpen, onClose }) {
                 </Box>
               </InputLeftElement>
               <Input
-                isInvalid={Boolean(errors.chat?.message)}
-                {...register("chat", {
-                  required: "Please write a chat",
+                isInvalid={Boolean(errors.message?.message)}
+                {...register("message", {
+                  required: "Please write a message",
                 })}
                 variant={"filled"}
-                placeholder="Send Your Chat"
+                placeholder="Send Your Message"
               />
             </InputGroup>
-            {mutation.isError ? (
-              <Text color="red.500" textAlign={"center"} fontSize="sm">
-                {console.log(mutation.error)}
-              </Text>
-            ) : null}
-            <Button
-              isLoading={mutation.isLoading}
-              type="submit"
-              mt={4}
-              colorScheme={"red"}
-              w="100%"
-            >
+
+            <Button type="submit" mt={4} colorScheme={"red"} w="100%">
               Send
             </Button>
           </ModalBody>

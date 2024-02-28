@@ -1,4 +1,4 @@
-import { FaMoon, FaSun, FaBell, FaRegBell } from "react-icons/fa";
+import { FaMoon, FaSun } from "react-icons/fa";
 import { BsFillPinMapFill } from "react-icons/bs";
 import {
   Avatar,
@@ -183,7 +183,7 @@ export default function Header() {
             >
               Chat
             </Button>
-            <Notification />
+            {!loggedIn ? null : <Notification />}
           </Menu>
         )}
       </HStack>
@@ -193,7 +193,9 @@ export default function Header() {
         isOpen={isFindPasswordOpen}
         onClose={onFindPasswordClose}
       />
-      <ChatModal isOpen={isChatOpen} onClose={onChatClose} />
+      {!loggedIn ? null : (
+        <ChatModal isOpen={isChatOpen} onClose={onChatClose} />
+      )}
     </Stack>
   );
 }

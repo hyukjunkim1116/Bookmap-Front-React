@@ -2,6 +2,7 @@ import useWebSocket from "react-use-websocket";
 import { useState } from "react";
 import { axiosInstance } from "../utils/axiosUtils";
 
+//완료
 const getChats = async () => {
   axiosInstance.interceptors.request.use((config) => {
     if (!config.headers) return config;
@@ -13,13 +14,12 @@ const getChats = async () => {
     }
     return config;
   });
-  return await axiosInstance.get("webchat/");
+  return await axiosInstance.get("webchat/").then((response) => response.data);
 };
-
-const useChatWebSocket = (uid) => {
+//완료
+export const useChatWebSocket = (uid) => {
   const [newMessage, setNewMessage] = useState([]);
   const [message, setMessage] = useState("");
-  const { fetchData } = getChats();
   const socketUrl = `ws://127.0.0.1:8000/webchat?uid=${uid}`;
   const [reconnectionAttempt, setReconnectionAttempt] = useState(0);
   const maxConnectionAttempts = 4;
@@ -27,7 +27,7 @@ const useChatWebSocket = (uid) => {
   const { sendJsonMessage } = useWebSocket(socketUrl, {
     onOpen: async () => {
       try {
-        const data = await fetchData();
+        const data = await getChats();
         setNewMessage([]);
         setNewMessage(Array.isArray(data) ? data : []);
         console.log("Connected!!!");
@@ -46,6 +46,7 @@ const useChatWebSocket = (uid) => {
       console.log("Error!");
     },
     onMessage: (msg) => {
+      console.log(msg, "msg");
       const data = JSON.parse(msg.data);
       setNewMessage((prev_msg) => [...prev_msg, data.new_message]);
       setMessage("");
@@ -70,4 +71,3 @@ const useChatWebSocket = (uid) => {
     sendJsonMessage,
   };
 };
-export default useChatWebSocket;
