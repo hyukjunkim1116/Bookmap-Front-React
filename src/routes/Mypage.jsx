@@ -9,16 +9,32 @@ import {
   Heading,
   FormControl,
   FormLabel,
+  HStack,
+  useDisclosure,
+  AlertDialog,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogBody,
+  AlertDialogFooter,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { useAuthStore } from "../stores/auth";
 import ProtectedPage from "../components/ProtectedPage";
-import { updateUserProfile } from "../services/auth";
-import { useState } from "react";
+import { updateUserProfile, deleteUser } from "../services/auth";
+import { useState, useRef } from "react";
+import UploadUserPhotoModal from "../components/UploadUserPhotoModal";
 import ChangePassword from "../components/ChangePassword";
 export default function Mypage() {
-  const { updateuser, user, getUid } = useAuthStore();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: photoIsOpen = false,
+    onOpen: photoOnOpen,
+    onClose: photoOnClose,
+  } = useDisclosure();
+  const cancelRef = useRef();
+  const { updateuser, user, getUid, clearUser } = useAuthStore();
   const uid = getUid();
   const {
     register,
@@ -48,6 +64,21 @@ export default function Mypage() {
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
   };
+  const deleteUserMutation = useMutation({
+    mutationFn: deleteUser,
+    onSuccess: (response) => {
+      toast({
+        title: "I'm so sad",
+        description: "bye...",
+        position: "bottom-right",
+      });
+      reset();
+      clearUser();
+    },
+  });
+  const handleDeleteUser = () => {
+    deleteUserMutation.mutate(uid);
+  };
   return (
     <ProtectedPage>
       <Box
@@ -59,8 +90,20 @@ export default function Mypage() {
         borderRadius="lg"
         boxShadow="lg"
       >
-        <Heading mb="20px">My Profile</Heading>
-        <VStack spacing="20px" align="stretch">
+        <HStack
+          alignItems={"center"}
+          display={"flex"}
+          justifyContent={"space-between"}
+        >
+          <Heading>My Profile</Heading>
+          <Button colorScheme="blue" onClick={onOpen}>
+            Delete My Account
+          </Button>
+          <Button colorScheme="blue" onClick={photoOnOpen}>
+            Upload My Image
+          </Button>
+        </HStack>
+        <VStack spacing="20px" align="stretch" mt={4}>
           <FormControl as="form" onSubmit={handleSubmit(onSubmit)}>
             <FormLabel>Username</FormLabel>
             <Input
@@ -91,6 +134,33 @@ export default function Mypage() {
           <ChangePassword />
         </VStack>
       </Box>
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete Account
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure? You can&apos;t undo this action afterwards.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button colorScheme="red" onClick={handleDeleteUser} ml={3}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+      <UploadUserPhotoModal isOpen={photoIsOpen} onClose={photoOnClose} />
     </ProtectedPage>
   );
 }

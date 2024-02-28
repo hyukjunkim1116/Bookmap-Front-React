@@ -16,13 +16,14 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import { FaUserNinja, FaLock } from "react-icons/fa";
+import { FaLock, FaUserNinja } from "react-icons/fa";
 import { useMutation } from "@tanstack/react-query";
 import { findPasswordWithEmail } from "../services/auth";
 import { useAuthStore } from "../stores/auth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 export default function FindPasswordModal({ isOpen, onClose }) {
   const { setUser, setToken } = useAuthStore();
+  const [newPassword, setNewPassword] = useState(null);
   const {
     register,
     handleSubmit,
@@ -33,9 +34,10 @@ export default function FindPasswordModal({ isOpen, onClose }) {
   const mutation = useMutation({
     mutationFn: findPasswordWithEmail,
     onSuccess: (response) => {
+      setNewPassword(response.password);
       console.log(response, "asdasd");
       toast({
-        title: "welcome back!",
+        title: "Confirm Your password!",
         status: "success",
       });
       reset();
@@ -53,39 +55,52 @@ export default function FindPasswordModal({ isOpen, onClose }) {
       <ModalContent>
         <ModalHeader>Find Password</ModalHeader>
         <ModalCloseButton />
-        <ModalBody as="form" onSubmit={handleSubmit(onSubmit)}>
+        {!newPassword ? (
+          <ModalBody as="form" onSubmit={handleSubmit(onSubmit)}>
+            <VStack>
+              <InputGroup size={"md"}>
+                <InputLeftElement>
+                  <Box color="gray.500">
+                    <FaUserNinja />
+                  </Box>
+                </InputLeftElement>
+                <Input
+                  isInvalid={Boolean(errors.email?.message)}
+                  {...register("email", {
+                    required: "Please write a email",
+                  })}
+                  variant={"filled"}
+                  placeholder="Email"
+                />
+              </InputGroup>
+            </VStack>
+            {mutation.isError ? (
+              <Text color="red.500" textAlign={"center"} fontSize="sm">
+                {console.log(mutation.error)}
+              </Text>
+            ) : null}
+            <Button
+              isLoading={mutation.isLoading}
+              type="submit"
+              mt={4}
+              colorScheme={"red"}
+              w="100%"
+            >
+              Find Password
+            </Button>
+          </ModalBody>
+        ) : (
           <VStack>
             <InputGroup size={"md"}>
               <InputLeftElement>
                 <Box color="gray.500">
-                  <FaUserNinja />
+                  <FaLock />
                 </Box>
               </InputLeftElement>
-              <Input
-                isInvalid={Boolean(errors.email?.message)}
-                {...register("email", {
-                  required: "Please write a email",
-                })}
-                variant={"filled"}
-                placeholder="Email"
-              />
+              <Input readOnly value={newPassword || null} />
             </InputGroup>
           </VStack>
-          {mutation.isError ? (
-            <Text color="red.500" textAlign={"center"} fontSize="sm">
-              {console.log(mutation.error)}
-            </Text>
-          ) : null}
-          <Button
-            isLoading={mutation.isLoading}
-            type="submit"
-            mt={4}
-            colorScheme={"red"}
-            w="100%"
-          >
-            Find Password
-          </Button>
-        </ModalBody>
+        )}
       </ModalContent>
     </Modal>
   );

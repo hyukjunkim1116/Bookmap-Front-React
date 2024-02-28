@@ -1,7 +1,8 @@
-import jwtaxios from "../utils/interceptor";
-import axiosInstance from "../utils/axiosUtils";
+/* eslint-disable no-unused-vars */
+import { axiosInstance, axiosFormInstance } from "../utils/axiosUtils";
 import { jwtDecode } from "jwt-decode";
 //TODO : axios interceptor response use 완성하기
+//TODO : 무한스크롤,검색,필터링 하기
 // 완료
 const DEFAULT_PHOTO_URL =
   "https://api.dicebear.com/6.x/adventurer-neutral/svg?seed=";
@@ -83,7 +84,7 @@ export const updateUserPassword = async (data) => {
     .put(`users/change-password/`, data)
     .then((response) => response.data);
 };
-
+//완료
 export const findPasswordWithEmail = async (data) => {
   console.log(data, "dada");
   const email = data?.email;
@@ -91,10 +92,32 @@ export const findPasswordWithEmail = async (data) => {
     .put(`users/find-password/`, email)
     .then((response) => response.data);
 };
-
+//완료
 export async function deleteUser(uid) {
-  return await jwtaxios.delete(`users/${uid}/`);
+  axiosInstance.interceptors.request.use((config) => {
+    if (!config.headers) return config;
+    const accessToken = JSON.parse(localStorage.getItem("user")).state?.token
+      ?.access;
+    if (accessToken && config.headers) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+      config.headers["Content-Type"] = "application/json";
+    }
+    return config;
+  });
+  return await axiosInstance.delete(`users/${uid}/`);
 }
-// export async function updateUserImage(data, uid) {
-//   return await formInstance.patch(`users/${uid}/image`, data);
-// }
+//완료
+export async function updateUserImage(data) {
+  axiosFormInstance.interceptors.request.use((config) => {
+    if (!config.headers) return config;
+    const accessToken = JSON.parse(localStorage.getItem("user")).state?.token
+      ?.access;
+    if (accessToken && config.headers) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  });
+  return await axiosFormInstance.patch(`users/${data.uid}/image`, {
+    image: data.image[0],
+  });
+}

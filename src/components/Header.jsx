@@ -1,4 +1,4 @@
-import { FaMoon, FaSun } from "react-icons/fa";
+import { FaMoon, FaSun, FaBell, FaRegBell } from "react-icons/fa";
 import { BsFillPinMapFill } from "react-icons/bs";
 import {
   Avatar,
@@ -25,6 +25,9 @@ import { useMutation } from "@tanstack/react-query";
 import { useRef, useState, useEffect } from "react";
 import { useAuthStore } from "../stores/auth";
 import { sendVerificationEmail } from "../services/auth";
+import ChatModal from "./ChatModal";
+import Notification from "./Notification";
+
 export default function Header() {
   const { user, token, clearUser } = useAuthStore();
   const [loggedIn, setLoggedIn] = useState();
@@ -42,6 +45,11 @@ export default function Header() {
     onOpen: onFindPasswordOpen,
   } = useDisclosure();
   const {
+    isOpen: isChatOpen,
+    onClose: onChatClose,
+    onOpen: onChatOpen,
+  } = useDisclosure();
+  const {
     isOpen: isLoginOpen,
     onClose: onLoginClose,
     onOpen: onLoginOpen,
@@ -52,6 +60,7 @@ export default function Header() {
     onOpen: onSignUpOpen,
   } = useDisclosure();
   const { toggleColorMode } = useColorMode();
+
   const logoColor = useColorModeValue("red.500", "red.200");
   const Icon = useColorModeValue(FaMoon, FaSun);
   const toast = useToast();
@@ -152,6 +161,9 @@ export default function Header() {
               <Avatar name={user?.username} src={user?.image} size={"md"} />
             </MenuButton>
             <MenuList>
+              <Link to="/post/upload">
+                <MenuItem>글쓰기</MenuItem>
+              </Link>
               {user?.is_verified ? (
                 <Link to="/mypage">
                   <MenuItem>나의 프로필</MenuItem>
@@ -163,6 +175,15 @@ export default function Header() {
               )}
               <MenuItem onClick={onLogOut}>Log out</MenuItem>
             </MenuList>
+            <Button
+              color="red.500"
+              textAlign={"center"}
+              fontSize="sm"
+              onClick={onChatOpen}
+            >
+              Chat
+            </Button>
+            <Notification />
           </Menu>
         )}
       </HStack>
@@ -172,6 +193,7 @@ export default function Header() {
         isOpen={isFindPasswordOpen}
         onClose={onFindPasswordClose}
       />
+      <ChatModal isOpen={isChatOpen} onClose={onChatClose} />
     </Stack>
   );
 }

@@ -1,4 +1,4 @@
-import axiosInstance from "../utils/axiosUtils";
+import { axiosInstance } from "../utils/axiosUtils";
 export function payToPortOne(data) {
   return axiosInstance.post(`payments/pay`, data);
 }
