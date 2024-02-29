@@ -1,8 +1,9 @@
 /* eslint-disable no-unused-vars */
-import { axiosInstance, axiosFormInstance } from "../utils/axiosUtils";
+import jwtInstance from "../utils/jsonInterceptor";
+import formInstance from "../utils/formInterceptor";
+import axiosInstance from "../utils/instance";
 import { jwtDecode } from "jwt-decode";
-//TODO : axios interceptor response use 완성하기
-//TODO : 무한스크롤(useinfinitequery),검색,필터링 하기
+
 //TODO : 결제기능 만들기
 // 완료
 const DEFAULT_PHOTO_URL =
@@ -57,31 +58,11 @@ export const sendVerificationEmail = async (uid) => {
 export const updateUserProfile = async (userData) => {
   const { data, uid } = userData;
 
-  axiosInstance.interceptors.request.use((config) => {
-    if (!config.headers) return config;
-    const accessToken = JSON.parse(localStorage.getItem("user")).state.token
-      .access;
-    if (accessToken && config.headers) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-      config.headers["Content-Type"] = "application/json";
-    }
-    return config;
-  });
-  return await axiosInstance.put(`users/${uid}/`, data);
+  return await jwtInstance.put(`users/${uid}/`, data);
 };
 //완료
 export const updateUserPassword = async (data) => {
-  axiosInstance.interceptors.request.use((config) => {
-    if (!config.headers) return config;
-    const accessToken = JSON.parse(localStorage.getItem("user")).state?.token
-      ?.access;
-    if (accessToken && config.headers) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-      config.headers["Content-Type"] = "application/json";
-    }
-    return config;
-  });
-  return await axiosInstance
+  return await jwtInstance
     .put(`users/change-password/`, data)
     .then((response) => response.data);
 };
@@ -95,30 +76,11 @@ export const findPasswordWithEmail = async (data) => {
 };
 //완료
 export async function deleteUser(uid) {
-  axiosInstance.interceptors.request.use((config) => {
-    if (!config.headers) return config;
-    const accessToken = JSON.parse(localStorage.getItem("user")).state?.token
-      ?.access;
-    if (accessToken && config.headers) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-      config.headers["Content-Type"] = "application/json";
-    }
-    return config;
-  });
-  return await axiosInstance.delete(`users/${uid}/`);
+  return await jwtInstance.delete(`users/${uid}/`);
 }
 //완료
 export async function updateUserImage(data) {
-  axiosFormInstance.interceptors.request.use((config) => {
-    if (!config.headers) return config;
-    const accessToken = JSON.parse(localStorage.getItem("user")).state?.token
-      ?.access;
-    if (accessToken && config.headers) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    }
-    return config;
-  });
-  return await axiosFormInstance.patch(`users/${data.uid}/image`, {
+  return await formInstance.patch(`users/${data.uid}/image`, {
     image: data.image[0],
   });
 }

@@ -119,7 +119,7 @@ export default function PostDetail() {
       queryClient.refetchQueries(["postDetail"]);
     },
   });
-  
+
   const toggleLike = () => {
     const postId = data.id;
     likeMutation.mutate({ postId });
@@ -132,7 +132,7 @@ export default function PostDetail() {
     const postId = data.id;
     bookmarkMutation.mutate({ postId });
   };
-  const handleReport = () => {};
+
   return (
     <Box
       pb={40}

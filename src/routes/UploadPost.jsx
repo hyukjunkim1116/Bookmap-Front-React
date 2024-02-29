@@ -80,7 +80,7 @@ export default function UploadPost() {
               </InputGroup>
             </FormControl>
             {mutation.isError ? (
-              <Text color="red.500">Something went wrong</Text>
+              <Text color="red.500">{mutation.error.message}</Text>
             ) : null}
             <Button
               type="submit"

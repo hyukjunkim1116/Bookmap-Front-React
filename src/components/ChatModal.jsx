@@ -27,7 +27,7 @@ export default function ChatModal({ isOpen, onClose }) {
   const uid = getUid();
   const { newMessage, message, setMessage, sendJsonMessage } =
     useChatWebSocket(uid);
-  console.log(newMessage, "message");
+
   const {
     register,
     handleSubmit,
@@ -70,7 +70,14 @@ export default function ChatModal({ isOpen, onClose }) {
                 </Box>
                 <Spacer />
                 <Text fontSize="xs" color="gray.500">
-                  {new Date(message.timestamp).toLocaleTimeString()}
+                  {new Intl.DateTimeFormat("ko-KR", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                  }).format(new Date(message.timestamp))}
                 </Text>
               </Flex>
             ))}

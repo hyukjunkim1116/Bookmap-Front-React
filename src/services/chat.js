@@ -1,20 +1,10 @@
 import useWebSocket from "react-use-websocket";
 import { useState } from "react";
-import { axiosInstance } from "../utils/axiosUtils";
+import jwtInstance from "../utils/jsonInterceptor";
 
 //완료
 const getChats = async () => {
-  axiosInstance.interceptors.request.use((config) => {
-    if (!config.headers) return config;
-    const accessToken = JSON.parse(localStorage.getItem("user")).state.token
-      .access;
-    if (accessToken && config.headers) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-      config.headers["Content-Type"] = "application/json";
-    }
-    return config;
-  });
-  return await axiosInstance.get("webchat/").then((response) => response.data);
+  return await jwtInstance.get("webchat/").then((response) => response.data);
 };
 //완료
 export const useChatWebSocket = (uid) => {

@@ -19,6 +19,7 @@ module.exports = {
     ],
     "react/prop-types": "off",
     "react/no-children-prop": "off",
+    "no-unused-vars": "off",
     "@tanstack/query/exhaustive-deps": "error",
     "@tanstack/query/no-rest-destructuring": "warn",
     "@tanstack/query/stable-query-client": "error",
