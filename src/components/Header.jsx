@@ -1,4 +1,4 @@
-import { FaMoon, FaSun } from "react-icons/fa";
+import { FaMoon, FaSun, FaRegCreditCard } from "react-icons/fa";
 import { BsFillPinMapFill } from "react-icons/bs";
 import {
   Avatar,
@@ -27,8 +27,9 @@ import { useAuthStore } from "../stores/auth";
 import { sendVerificationEmail } from "../services/auth";
 import ChatModal from "./ChatModal";
 import Notification from "./Notification";
-
+import { useNavigate } from "react-router-dom";
 export default function Header() {
+  const navigate = useNavigate();
   const { user, token, clearUser } = useAuthStore();
   const [loggedIn, setLoggedIn] = useState();
   useEffect(() => {
@@ -184,6 +185,13 @@ export default function Header() {
               Chat
             </Button>
             {!loggedIn ? null : <Notification />}
+            <Button
+              textAlign={"center"}
+              fontSize="sm"
+              onClick={() => navigate("/payment")}
+            >
+              <FaRegCreditCard />
+            </Button>
           </Menu>
         )}
       </HStack>

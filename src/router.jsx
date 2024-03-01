@@ -8,6 +8,12 @@ import Mypage from "./routes/Mypage";
 import UploadPost from "./routes/UploadPost";
 import PostDetail from "./routes/PostDetail";
 import PostEdit from "./routes/PostEdit";
+import PaymentHome from "./routes/PaymentHome";
+import Payment from "./routes/Payment";
+import Certification from "./routes/Certification";
+import PaymentResult from "./routes/PaymentResult";
+import CertificationResult from "./routes/CertificationResult";
+import PaymentList from "./routes/PaymentList";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -57,6 +63,30 @@ const router = createBrowserRouter([
       {
         path: "mypage",
         element: <Mypage />,
+      },
+      {
+        path: "mypage/pay",
+        element: <PaymentList />,
+      },
+      {
+        path: "payment",
+        element: <PaymentHome />,
+      },
+      {
+        path: "payment/pay",
+        element: <Payment />,
+      },
+      {
+        path: "payment/pay/result",
+        element: <PaymentResult />,
+      },
+      {
+        path: "payment/certification",
+        element: <Certification />,
+      },
+      {
+        path: "payment/certification/result",
+        element: <CertificationResult />,
       },
     ],
   },

@@ -6,6 +6,7 @@ import {
   MenuList,
   MenuItem,
   Button,
+  Avatar,
 } from "@chakra-ui/react";
 import { FaBellSlash, FaBell } from "react-icons/fa";
 import { useMutation } from "@tanstack/react-query";
@@ -39,9 +40,11 @@ export default function Notification() {
   }, [newMessage]);
   return (
     <Menu closeOnSelect={false}>
-      <MenuButton>
-        <IconButton icon={allRead ? <FaBellSlash /> : <FaBell />} size={"lg"} />
-      </MenuButton>
+      <MenuButton
+        as={IconButton}
+        icon={allRead ? <FaBellSlash /> : <FaBell />}
+        size={"md"}
+      ></MenuButton>
       <MenuList>
         {newMessage.map((notification) => (
           <MenuItem

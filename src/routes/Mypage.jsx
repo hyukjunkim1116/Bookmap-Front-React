@@ -26,7 +26,9 @@ import { updateUserProfile, deleteUser } from "../services/auth";
 import { useState, useRef } from "react";
 import UploadUserPhotoModal from "../components/UploadUserPhotoModal";
 import ChangePassword from "../components/ChangePassword";
+import { useNavigate } from "react-router-dom";
 export default function Mypage() {
+  const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: photoIsOpen = false,
@@ -101,6 +103,9 @@ export default function Mypage() {
           </Button>
           <Button colorScheme="blue" onClick={photoOnOpen}>
             Upload My Image
+          </Button>
+          <Button colorScheme="blue" onClick={() => navigate("/mypage/pay")}>
+            결제 목록 보기
           </Button>
         </HStack>
         <VStack spacing="20px" align="stretch" mt={4}>
