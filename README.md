@@ -60,7 +60,7 @@ $ npm run dev
 ### Development
 
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=Javascript&logoColor=white)
-![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=React&logoColor=black)
+![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black)
 ![chakra-ui](https://shields.io/badge/chakra--ui-black?logo=chakraui&style=for-the-badge)
 
 ### Communication
