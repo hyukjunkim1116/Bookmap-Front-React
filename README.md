@@ -47,6 +47,16 @@ $ npm run dev
 - 최상위 컴포넌트를 만들어 props로 유저 정보를 내려주는 방식의 경우 불필요한 props 전달이 발생합니다. 따라서, 필요한 컴포넌트 내부에서만 상태 값을 가져다 사용하기 위해 상태 관리 라이브러리를 사용하기로 했습니다.
 - 기존 프로젝트의 프론트엔드에서 사용한 Pinia와 비슷하여 학습시간을 절약하였습니다.
 
+### tanstack/react-query
+
+- React Component 내부에서 간단하고 직관적으로 API를 사용할 수 있기 때문에 도입했습니다.
+- 캐싱, Window Focus Refetching 등 다양한 기능을 활용하여 API 요청과 관련된 번잡한 작업 없이 “핵심 로직”에 집중할 수 있었습니다.
+
+### react-hook-form
+
+- 백엔드로 보내는 폼을 효과적으로 관리하기 위해 도입했습니다.
+- 비제어 컴포넌트 방식으로 구현되어 있기에 불필요한 렌더링을 줄일 수 있었습니다.
+
 ### Environment
 
 ![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-007ACC?style=for-the-badge&logo=Visual%20Studio%20Code&logoColor=white)
@@ -62,6 +72,8 @@ $ npm run dev
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=Javascript&logoColor=white)
 ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black)
 ![chakra-ui](https://shields.io/badge/chakra--ui-black?logo=chakraui&style=for-the-badge)
+![Tanstack/react-query](https://img.shields.io/badge/-React%20Query-FF4154?style=for-the-badge&logo=react%20query&logoColor=white)
+![React Hook Form](https://img.shields.io/badge/React%20Hook%20Form-%23EC5990.svg?style=for-the-badge&logo=reacthookform&logoColor=white)
 
 ### Communication
 
