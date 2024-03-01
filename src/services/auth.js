@@ -3,8 +3,6 @@ import jwtInstance from "../utils/jsonInterceptor";
 import formInstance from "../utils/formInterceptor";
 import axiosInstance from "../utils/instance";
 import { jwtDecode } from "jwt-decode";
-
-//TODO : 결제기능 만들기
 // 완료
 const DEFAULT_PHOTO_URL =
   "https://api.dicebear.com/6.x/adventurer-neutral/svg?seed=";
