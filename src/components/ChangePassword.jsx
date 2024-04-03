@@ -34,12 +34,16 @@ export default function ChangePassword() {
       //   navigate("/");
       clearUser();
     },
-    onError: (err) => {
-      console.log(err);
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: error.response.data.detail,
+        status: "error",
+      });
     },
   });
   const onPasswordSubmit = (data) => {
-    console.log(data, "dasdas");
+  
     const { oldPassword, newPassword, newPasswordConfirm } = data;
     passwordMutation.mutate({ oldPassword, newPassword, newPasswordConfirm });
   };

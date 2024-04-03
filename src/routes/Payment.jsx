@@ -36,8 +36,9 @@ export default function Payment() {
   const mutation = useMutation({
     mutationFn: payToPortOne,
     onSuccess: (response) => {
-      console.log(response);
+    
     },
+    
   });
   const navigate = useNavigate();
   const { register, handleSubmit, setValue, getValues } = useForm();
@@ -103,7 +104,7 @@ export default function Payment() {
       };
       mutation.mutate(data);
     }
-    console.log(response, "callback");
+  
     const query = queryString.stringify(response);
     navigate(`/payment/pay/result?${query}`);
   };

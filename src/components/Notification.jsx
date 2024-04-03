@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { FaBellSlash, FaBell } from "react-icons/fa";
 import { useMutation } from "@tanstack/react-query";
+import { useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import {
   useNotificationWebSocket,
@@ -17,7 +18,9 @@ import {
   getNotifications,
 } from "../services";
 import { useAuthStore } from "../stores/auth";
+
 export default function Notification() {
+  const toast = useToast();
   const { getUid } = useAuthStore();
   const uid = getUid();
   const { newMessage, setNewMessage } = useNotificationWebSocket(uid);
@@ -27,7 +30,13 @@ export default function Notification() {
       const data = await getNotifications();
       setNewMessage([]);
       setNewMessage(Array.isArray(data) ? data : []);
-      console.log(newMessage);
+    },
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: error.response.data.detail,
+        status: "error",
+      });
     },
   });
   const [allRead, setAllRead] = useState();

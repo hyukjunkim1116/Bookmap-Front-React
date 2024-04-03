@@ -1,10 +1,8 @@
 /* eslint-disable no-unused-vars */
-import { FaCamera, FaRegHeart, FaStar } from "react-icons/fa";
 import {
   Box,
   Button,
   Grid,
-  HStack,
   Image,
   Text,
   useColorModeValue,

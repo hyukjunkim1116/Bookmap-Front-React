@@ -27,13 +27,19 @@ export default function UploadPost() {
   const mutation = useMutation({
     mutationFn: createPost,
     onSuccess: (response) => {
-      console.log(response);
       toast({
         status: "success",
         title: "Room created",
         position: "bottom-right",
       });
       navigate(`/post/${response.id}`);
+    },
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: error.response.data.detail,
+        status: "error",
+      });
     },
   });
 

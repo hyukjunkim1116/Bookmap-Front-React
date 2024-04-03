@@ -2,11 +2,11 @@ import axios from "axios";
 import { useAuthStore } from "../stores/auth";
 const djangoApi = "http://localhost:8000";
 const inst = axios.create({
-  baseURL: `${djangoApi}/api/`,
+  baseURL: `${djangoApi}/api`,
   withCredentials: true,
 });
 const formInstance = axios.create({
-  baseURL: `${djangoApi}/api/`,
+  baseURL: `${djangoApi}/api`,
   withCredentials: true,
 });
 formInstance.interceptors.request.use((config) => {
@@ -42,7 +42,7 @@ formInstance.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return formInstance(originalRequest); // 수정된 부분
       } catch (e) {
-        console.log(e, error);
+        console.log(e);
         useAuthStore.getState().clearUser();
         return Promise.reject(e);
       }

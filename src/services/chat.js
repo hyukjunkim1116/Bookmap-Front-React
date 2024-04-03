@@ -4,7 +4,7 @@ import jwtInstance from "../utils/jsonInterceptor";
 
 //완료
 const getChats = async () => {
-  return await jwtInstance.get("webchat/").then((response) => response.data);
+  return await jwtInstance.get("/webchat/").then((response) => response.data);
 };
 //완료
 export const useChatWebSocket = (uid) => {

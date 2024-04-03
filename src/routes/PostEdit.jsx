@@ -33,13 +33,19 @@ export default function PostEdit() {
   const mutation = useMutation({
     mutationFn: updatePost,
     onSuccess: (response) => {
-      console.log(response);
       toast({
         status: "success",
         title: "Post Editeed!",
         position: "bottom-right",
       });
       navigate(`/post/${params.postId}`);
+    },
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: error.response.data.detail,
+        status: "error",
+      });
     },
   });
   const [title, setTitle] = useState(data?.title);

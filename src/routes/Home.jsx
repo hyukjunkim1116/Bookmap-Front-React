@@ -75,7 +75,6 @@ export default function Home() {
     if (allPages) {
       setDataList((prev) => [...prev, ...allPages]);
     }
-    console.log(dataList, "datal");
   }, [data]);
   useEffect(() => {
     const observer = new IntersectionObserver(handleObserver, {

@@ -35,12 +35,19 @@ export default function FindPasswordModal({ isOpen, onClose }) {
     mutationFn: findPasswordWithEmail,
     onSuccess: (response) => {
       setNewPassword(response.password);
-      console.log(response, "asdasd");
+      
       toast({
         title: "Confirm Your password!",
         status: "success",
       });
       reset();
+    },
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: error.response.data.detail,
+        status: "error",
+      });
     },
   });
   useEffect(() => {

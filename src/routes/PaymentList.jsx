@@ -9,7 +9,7 @@ export default function PaymentList() {
     queryFn: getPaymentsHistory,
     refetchOnWindowFocus: false,
   });
-  console.log(paymentData);
+
   return (
     <ProtectedPage>
       <Heading textAlign={"center"} mt={6}>

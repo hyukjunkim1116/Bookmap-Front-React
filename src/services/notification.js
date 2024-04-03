@@ -10,7 +10,7 @@ export const getNotifications = async () => {
 };
 //완료
 export const putReadNotification = async (notId) => {
-  return await jwtInstance.patch(`notification/${notId}`);
+  return await jwtInstance.patch(`/notification/${notId}/`);
 };
 //완료
 export const useNotificationWebSocket = (uid) => {

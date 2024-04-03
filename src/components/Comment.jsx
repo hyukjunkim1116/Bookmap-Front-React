@@ -53,7 +53,6 @@ export default function Comment({ postId }) {
   const mutation = useMutation({
     mutationFn: addComment,
     onSuccess: (response) => {
-      console.log(response);
       toast({
         status: "success",
         title: "Comment created",
@@ -62,11 +61,18 @@ export default function Comment({ postId }) {
       reset();
       queryClient.refetchQueries(["comments"]);
     },
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: error.response.data.detail,
+        status: "error",
+      });
+    },
   });
   const editMutation = useMutation({
     mutationFn: editComment,
     onSuccess: (response) => {
-      console.log(response);
+      
       editReset();
       setEditedCommentId(null);
       setEditedComment("");
@@ -76,13 +82,20 @@ export default function Comment({ postId }) {
   const deleteMutation = useMutation({
     mutationFn: deleteComment,
     onSuccess: (response) => {
-      console.log(response);
+      
       toast({
         status: "success",
         title: "Comment deleted",
         position: "bottom-right",
       });
       queryClient.refetchQueries(["comments"]);
+    },
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: error.response.data.detail,
+        status: "error",
+      });
     },
   });
   const onDelete = (commentId) => {
@@ -97,12 +110,12 @@ export default function Comment({ postId }) {
     }
   };
   const onSubmit = ({ comment }) => {
-    console.log(comment, "asdasda");
+    
     mutation.mutate({ comment, postId });
   };
   const [editedCommentId, setEditedCommentId] = useState(null);
   const onEditSubmit = ({ editedComment }) => {
-    console.log(editedComment);
+    
     editMutation.mutate({ editedComment, editedCommentId });
   };
   const [editedComment, setEditedComment] = useState("");

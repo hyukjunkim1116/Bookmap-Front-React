@@ -34,7 +34,6 @@ export default function UploadUserPhotoModal({ isOpen, onClose, postId }) {
   const updatePhotoMutation = useMutation({
     mutationFn: uploadPostImage,
     onSuccess: (response) => {
-      console.log(response);
       toast({
         status: "success",
         title: "Image uploaded!",
@@ -44,10 +43,17 @@ export default function UploadUserPhotoModal({ isOpen, onClose, postId }) {
       reset();
       queryClient.refetchQueries(["postDetail"]);
     },
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: error.response.data.detail,
+        status: "error",
+      });
+    },
   });
   useEffect(() => {
     updatePhotoMutation.reset(); // Mutation을 초기 상태로 되돌림
-  }, []);
+  });
   const onSubmit = () => {
     updatePhotoMutation.mutate({ image: watch("image"), postId });
   };

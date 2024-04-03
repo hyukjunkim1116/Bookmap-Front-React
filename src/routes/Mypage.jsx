@@ -57,6 +57,13 @@ export default function Mypage() {
       });
       reset();
     },
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: error.response.data.detail,
+        status: "error",
+      });
+    },
   });
 
   const onSubmit = (data) => {
@@ -76,6 +83,13 @@ export default function Mypage() {
       });
       reset();
       clearUser();
+    },
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: error.response.data.detail,
+        status: "error",
+      });
     },
   });
   const handleDeleteUser = () => {

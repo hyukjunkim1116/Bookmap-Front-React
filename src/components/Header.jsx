@@ -74,10 +74,10 @@ export default function Header() {
         status: "success",
       });
     },
-    onError: (err) => {
-      console.log(err);
+    onError: (error) => {
+      console.log(error);
       toast({
-        title: "Something went wrong",
+        title: error.response.data.detail,
         status: "error",
       });
     },
@@ -102,6 +102,13 @@ export default function Header() {
           description: "See you later!",
         });
       }
+    },
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: error.response.data.detail,
+        status: "error",
+      });
     },
   });
   const onLogOut = async () => {

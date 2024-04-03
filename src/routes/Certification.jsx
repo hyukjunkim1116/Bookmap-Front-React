@@ -24,7 +24,7 @@ export default function Certification() {
     if (phone) data.phone = phone;
     if (min_age) data.min_age = min_age;
     const { IMP } = window;
-    console.log(data, "data");
+    
     IMP.init(userCode);
     IMP.certification(data, callback);
   };

@@ -39,10 +39,17 @@ export default function ReportModal({ isOpen, onClose, postId }) {
       onClose();
       reset();
     },
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: error.response.data.detail,
+        status: "error",
+      });
+    },
   });
   useEffect(() => {
     reportMutation.reset(); // Mutation을 초기 상태로 되돌림
-  }, []);
+  });
   const onSubmit = ({ title, content }) => {
     reportMutation.mutate({ title, content, postId });
   };

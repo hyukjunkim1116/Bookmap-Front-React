@@ -23,7 +23,6 @@ import { useEffect } from "react";
 import SocialLogin from "./SocialLogin";
 
 export default function LoginModal({ isOpen, onClose }) {
-  
   const { setUser, setToken } = useAuthStore();
   const {
     register,
@@ -44,14 +43,21 @@ export default function LoginModal({ isOpen, onClose }) {
       onClose();
       reset();
     },
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: error.response.data.detail,
+        status: "error",
+      });
+    },
   });
   useEffect(() => {
     mutation.reset(); // Mutation을 초기 상태로 되돌림
-  }, []);
+  });
   const onSubmit = ({ email, password }) => {
     mutation.mutate({ email, password });
   };
- 
+
   return (
     <Modal onClose={onClose} isOpen={isOpen}>
       <ModalOverlay />
@@ -108,11 +114,10 @@ export default function LoginModal({ isOpen, onClose }) {
           >
             Log in
           </Button>
-          
+
           <SocialLogin />
         </ModalBody>
       </ModalContent>
-      
     </Modal>
   );
 }

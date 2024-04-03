@@ -36,8 +36,12 @@ export default function SignUpModal({ isOpen, onClose }) {
       onClose();
       reset();
     },
-    onError: (err) => {
-      console.log(err);
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: error.response.data.detail,
+        status: "error",
+      });
     },
   });
   const onSubmit = ({ email, username, password, passwordConfirm }) => {

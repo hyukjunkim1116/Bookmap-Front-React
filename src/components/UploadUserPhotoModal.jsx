@@ -42,10 +42,17 @@ export default function UploadUserPhotoModal({ isOpen, onClose }) {
       });
       reset();
     },
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: error.response.data.detail,
+        status: "error",
+      });
+    },
   });
   useEffect(() => {
     updatePhotoMutation.reset(); // Mutation을 초기 상태로 되돌림
-  }, []);
+  });
   const onSubmit = () => {
     updatePhotoMutation.mutate({ image: watch("image"), uid });
   };

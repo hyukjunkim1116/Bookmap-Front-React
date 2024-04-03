@@ -10,12 +10,12 @@ export function generateDefaultPhotoURL(uid) {
   return `${DEFAULT_PHOTO_URL}${uid}`;
 }
 // 완료
-export const emailSignUp = (data) => {
-  axiosInstance.post("users/", data).then((response) => response.data);
+export const emailSignUp = async (data) => {
+  return await axiosInstance.post("/users/", data);
 };
 // 완료
 export const emailLogIn = async (data) => {
-  const response = await axiosInstance.post("users/login/", data);
+  const response = await axiosInstance.post("/users/login/", data);
   const { access, refresh, email, username, image, social, is_verified } =
     response.data;
   const { user_id } = jwtDecode(access);
@@ -33,7 +33,7 @@ export const emailLogIn = async (data) => {
 };
 //완료
 export const kakaoLogin = async (data) => {
-  const response = await axiosInstance.post(`users/kakao/`, data);
+  const response = await axiosInstance.post(`/users/kakao/`, data);
   const { access, refresh, email, username, image, social, is_verified } =
     response.data;
   const { user_id } = jwtDecode(access);
@@ -50,35 +50,34 @@ export const kakaoLogin = async (data) => {
 };
 //완료
 export const sendVerificationEmail = async (uid) => {
-  return await axiosInstance.post(`users/${uid}/verify/`);
+  return await axiosInstance.post(`/users/${uid}/verify/`);
 };
 //완료
 export const updateUserProfile = async (userData) => {
   const { data, uid } = userData;
 
-  return await jwtInstance.put(`users/${uid}/`, data);
+  return await jwtInstance.put(`/users/${uid}/`, data);
 };
 //완료
 export const updateUserPassword = async (data) => {
   return await jwtInstance
-    .put(`users/change-password/`, data)
+    .put(`/users/change-password/`, data)
     .then((response) => response.data);
 };
 //완료
 export const findPasswordWithEmail = async (data) => {
-  console.log(data, "dada");
   const email = data?.email;
   return await axiosInstance
-    .put(`users/find-password/`, email)
+    .put(`/users/find-password/`, email)
     .then((response) => response.data);
 };
 //완료
 export async function deleteUser(uid) {
-  return await jwtInstance.delete(`users/${uid}/`);
+  return await jwtInstance.delete(`/users/${uid}/`);
 }
 //완료
 export async function updateUserImage(data) {
-  return await formInstance.patch(`users/${data.uid}/image`, {
+  return await formInstance.patch(`/users/${data.uid}/image/`, {
     image: data.image[0],
   });
 }

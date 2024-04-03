@@ -64,7 +64,7 @@ export default function PostDetail() {
   const updatePhotoMutation = useMutation({
     mutationFn: deletePostImage,
     onSuccess: (response) => {
-      console.log(response);
+      
       toast({
         status: "success",
         title: "Image Deleted!",
@@ -72,6 +72,13 @@ export default function PostDetail() {
         description: "Feel free to upload more images.",
       });
       queryClient.refetchQueries(["postDetail"]);
+    },
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: error.response.data.detail,
+        status: "error",
+      });
     },
   });
   const handleDeletePhoto = () => {
@@ -82,7 +89,7 @@ export default function PostDetail() {
   const deletePostMutation = useMutation({
     mutationFn: deletePost,
     onSuccess: (response) => {
-      console.log(response);
+      
       toast({
         status: "success",
         title: "Post Deleted!",
@@ -90,6 +97,13 @@ export default function PostDetail() {
         description: "You can write another Post!",
       });
       navigate("/");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: error.response.data.detail,
+        status: "error",
+      });
     },
   });
   const handleDeletePost = () => {
@@ -106,17 +120,38 @@ export default function PostDetail() {
     onSuccess: (response) => {
       queryClient.refetchQueries(["postDetail"]);
     },
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: error.response.data.detail,
+        status: "error",
+      });
+    },
   });
   const dislikeMutation = useMutation({
     mutationFn: handleDislike,
     onSuccess: (response) => {
       queryClient.refetchQueries(["postDetail"]);
     },
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: error.response.data.detail,
+        status: "error",
+      });
+    },
   });
   const bookmarkMutation = useMutation({
     mutationFn: handleBookmark,
     onSuccess: (response) => {
       queryClient.refetchQueries(["postDetail"]);
+    },
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: error.response.data.detail,
+        status: "error",
+      });
     },
   });
 
