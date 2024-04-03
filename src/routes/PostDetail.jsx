@@ -27,7 +27,7 @@ import {
   FaSadCry,
 } from "react-icons/fa";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuthStore } from "../stores/auth";
 import { Helmet } from "react-helmet";
 import { useParams, useNavigate } from "react-router-dom";
@@ -53,18 +53,17 @@ export default function PostDetail() {
   const queryClient = useQueryClient();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [page, setPage] = useState(1);
   const { getUid } = useAuthStore();
   const uid = getUid();
   const params = useParams();
   const { isLoading, data } = useQuery({
     queryKey: ["postDetail", params.id],
     queryFn: () => getPostDetails(params.id),
+    refetchOnMount: true,
   });
   const updatePhotoMutation = useMutation({
     mutationFn: deletePostImage,
     onSuccess: (response) => {
-      
       toast({
         status: "success",
         title: "Image Deleted!",
@@ -89,7 +88,6 @@ export default function PostDetail() {
   const deletePostMutation = useMutation({
     mutationFn: deletePost,
     onSuccess: (response) => {
-      
       toast({
         status: "success",
         title: "Post Deleted!",
@@ -167,7 +165,26 @@ export default function PostDetail() {
     const postId = data.id;
     bookmarkMutation.mutate({ postId });
   };
-
+  const [likeIcon, setLikeIcon] = useState(
+    data?.is_liked ? <FaHeart /> : <FaRegHeart />
+  );
+  const [dislikeIcon, setDislikeIcon] = useState(
+    data?.is_disliked ? <FaAngry /> : <FaRegAngry />
+  );
+  const [bookmarkIcon, setBookmarkIcon] = useState(
+    data?.is_ ? <FaBookmark /> : <FaRegBookmark />
+  );
+  useEffect(() => {
+    setLikeIcon(data?.like?.includes(uid) ? <FaHeart /> : <FaRegHeart />);
+  }, [data?.like, uid]);
+  useEffect(() => {
+    setDislikeIcon(data?.dislike?.includes(uid) ? <FaAngry /> : <FaRegAngry />);
+  }, [data?.dislike, uid]);
+  useEffect(() => {
+    setBookmarkIcon(
+      data?.bookmark?.includes(uid) ? <FaBookmark /> : <FaRegBookmark />
+    );
+  }, [data?.bookmark, uid]);
   return (
     <Box
       pb={40}
@@ -235,7 +252,6 @@ export default function PostDetail() {
                 </Skeleton>
               </VStack>
             </VStack>
-
             <Avatar
               name={data?.author.username}
               size={"xl"}
@@ -246,19 +262,17 @@ export default function PostDetail() {
                 <ButtonGroup>
                   <IconButton
                     onClick={toggleLike}
-                    icon={data?.is_liked ? <FaHeart /> : <FaRegHeart />}
+                    icon={likeIcon}
                     size={"lg"}
                   ></IconButton>
                   <IconButton
                     onClick={toggleDislike}
-                    icon={data?.is_disliked ? <FaAngry /> : <FaRegAngry />}
+                    icon={dislikeIcon}
                     size={"lg"}
                   ></IconButton>
                   <IconButton
                     onClick={toggleBookmark}
-                    icon={
-                      data?.is_bookmarked ? <FaBookmark /> : <FaRegBookmark />
-                    }
+                    icon={bookmarkIcon}
                     size={"lg"}
                   ></IconButton>
                   {uid == data?.author.uid ? null : (
@@ -270,7 +284,6 @@ export default function PostDetail() {
                   )}
                 </ButtonGroup>
               ) : null}
-
               {uid == data?.author.uid ? (
                 <ButtonGroup>
                   <Button onClick={onOpen}>사진 올리기</Button>

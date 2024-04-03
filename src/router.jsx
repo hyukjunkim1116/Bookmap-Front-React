@@ -14,6 +14,7 @@ import Certification from "./routes/Certification";
 import PaymentResult from "./routes/PaymentResult";
 import CertificationResult from "./routes/CertificationResult";
 import PaymentList from "./routes/PaymentList";
+import Book from "./routes/Book";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <Home />,
+      },
+      {
+        path: "book",
+        element: <Book />,
       },
       {
         path: "post",

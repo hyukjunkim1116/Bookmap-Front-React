@@ -145,6 +145,7 @@ export default function Header() {
           aria-label="Toggle dark mode"
           icon={<Icon />}
         />
+        <Button onClick={() => navigate("/book")}>책 검색</Button>
         {!loggedIn ? (
           <>
             <Button onClick={onLoginOpen}>Log in</Button>

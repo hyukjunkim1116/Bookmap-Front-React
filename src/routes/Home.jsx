@@ -73,7 +73,11 @@ export default function Home() {
     const allPages = data?.pages[0]?.results;
 
     if (allPages) {
-      setDataList((prev) => [...prev, ...allPages]);
+      setDataList((prev) => {
+        const uniqueKeys = new Set(prev.map((item) => item.id));
+        const newDataList = allPages.filter((item) => !uniqueKeys.has(item.id));
+        return [...prev, ...newDataList];
+      });
     }
   }, [data]);
   useEffect(() => {
@@ -86,6 +90,7 @@ export default function Home() {
     }
     return () => observer.disconnect();
   }, [hasNextPage]);
+  console.log(data);
   return (
     <>
       <Stack
@@ -110,7 +115,6 @@ export default function Home() {
           <Button leftIcon={<SearchIcon />} onClick={handleSearch}>
             검색
           </Button>
-
           <Menu autoSelect={false}>
             <MenuButton
               as={IconButton}
