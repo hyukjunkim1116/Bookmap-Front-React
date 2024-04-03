@@ -1,7 +1,6 @@
 # FoodMap
 
-- [백엔드 바로가기](https://github.com/hyukjunkim1116/foodmap-backend)
-- [프론트엔드(Vue3) 바로가기](https://github.com/hyukjunkim1116/foodmap-Vue3)
+- [백엔드(Python) 바로가기](https://github.com/hyukjunkim1116/foodmap-backend)
 
 ## 배포 주소
 
